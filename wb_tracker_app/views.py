@@ -4,7 +4,7 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.db import IntegrityError
 
 from .forms import RegisterForm, SearchVendorCodeForm
@@ -58,6 +58,13 @@ def loginuser(request):
         else:
             login(request, user)
             return redirect('currentuser')
+
+
+def logoutuser(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('home')
+
 
 
 def currentuser(request):

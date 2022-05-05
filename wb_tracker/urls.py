@@ -27,6 +27,7 @@ urlpatterns = [
     path('signup/', views.signupuser, name='signupuser'),
     path('currentuser/', views.currentuser, name='currentuser'),
     path('login/', views.loginuser, name='loginuser'),
+    path('logout/', views.logoutuser, name='logoutuser'),
 
     #Tracking
     path('codeinput/', views.entervendorcode, name='entervendorcode'),
