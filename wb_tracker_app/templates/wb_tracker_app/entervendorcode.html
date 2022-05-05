@@ -1,0 +1,16 @@
+enter the vendor code
+<br>
+{% if user.is_authenticated %}
+    Logged in as {{ user.username }}
+{% endif %}
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="submit" value="submit"/>
+</form>
+
+{% if submitbutton == "Submit" %}
+    <h1>Entered vendor code is {{ vendor_code }}</h1>
+{% endif %}
+

@@ -1,1 +1,9 @@
 current user
+<br>
+
+{% if user.is_authenticated %}
+    Logged in as {{ user.username }}
+{% endif %}
+<br>
+
+<a href="{% url 'entervendorcode' %}">Check the price</a>
