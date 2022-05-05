@@ -3,10 +3,14 @@ from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from .models import VendorCode, CodeResponse
+from .models import VendorCode
 
 
 class RegisterForm(UserCreationForm):
+    """
+    Registration form
+    with email field
+    """
     email = forms.EmailField(max_length=255)
 
     class Meta:
@@ -15,10 +19,11 @@ class RegisterForm(UserCreationForm):
 
 
 class SearchVendorCodeForm(ModelForm):
+    """
+    Form for input
+    a vendor code
+    and time interval
+    """
     class Meta:
         model = VendorCode
         fields = ['vendor_code', 'date_from', 'date_to']
-
-#
-# class CodeResponseForm(forms.Form):
-#     vendor_code = forms.IntegerField()

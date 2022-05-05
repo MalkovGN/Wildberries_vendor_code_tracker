@@ -11,10 +11,17 @@ from .forms import RegisterForm, SearchVendorCodeForm
 
 
 def home(request):
+    """
+    Home page
+    """
     return render(request, 'wb_tracker_app/home.html')
 
 
 def signupuser(request):
+    """
+    User registration page,
+    with a field for email
+    """
     data = {}
     if request.method == 'GET':
         form = RegisterForm()
@@ -45,6 +52,9 @@ def signupuser(request):
 
 
 def loginuser(request):
+    """
+    Authentication function
+    """
     if request.method == 'GET':
         return render(request, 'wb_tracker_app/loginuser.html', {'form': AuthenticationForm})
     else:
@@ -61,6 +71,9 @@ def loginuser(request):
 
 
 def logoutuser(request):
+    """
+    Logout function
+    """
     if request.method == 'POST':
         logout(request)
         return redirect('home')
@@ -68,13 +81,21 @@ def logoutuser(request):
 
 
 def currentuser(request):
+    """
+    The first page after
+    registration/authentication
+    """
     return render(request, 'wb_tracker_app/currentuser.html')
 
 
 def entervendorcode(request):
+    """
+    A function that takes a vendor code and a time interval
+    and displays the history of the price
+    of goods with this article
+    """
     if request.method == 'GET':
         return render(request, 'wb_tracker_app/entervendorcode.html', {'form': SearchVendorCodeForm()})
-    # 46617793
     else:
         try:
             dates_list = []
@@ -119,4 +140,3 @@ def entervendorcode(request):
                 'wb_tracker_app/entervendorcode.html',
                 {'form': SearchVendorCodeForm()}
             )
-
