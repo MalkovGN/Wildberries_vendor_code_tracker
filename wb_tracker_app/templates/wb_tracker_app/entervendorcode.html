@@ -1,8 +1,9 @@
+{% extends 'wb_tracker_app/base.html' %}
+
+{% block content %}
+
 enter the vendor code
-<br>
-{% if user.is_authenticated %}
-    Logged in as {{ user.username }}
-{% endif %}
+
 
 <form action="" method="post">
     {% csrf_token %}
@@ -14,3 +15,4 @@ enter the vendor code
     <h1>Entered vendor code is {{ vendor_code }}</h1>
 {% endif %}
 
+{% endblock %}
