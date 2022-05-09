@@ -61,7 +61,7 @@ def loginuser(request):
     else:
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
         if user is None:
-            return(
+            return (
                 request,
                 'wb_tracker_app/loginuser.html',
                 {'form': AuthenticationForm, 'error': 'Username or password didnt match'}
@@ -98,10 +98,20 @@ def addingcard(request):
         return render(request, 'wb_tracker_app/addcard.html', {'adding_form': AddingCardForm})
     else:
         form = AddingCardForm(request.POST)
-        new_code = form.save(commit=False)
-        new_code.user = request.user
-        new_code.save()
-        return redirect('currentuser')
+        if form.is_valid():
+            vendor_code = form.cleaned_data.get('vendor_code')
+        response = requests.get('https://wbx-content-v2.wbstatic.net/price-history/' + str(vendor_code) + '.json')
+        if response.status_code != 200:
+            return render(
+                request,
+                'wb_tracker_app/addcard.html',
+                {'adding_form': AddingCardForm, 'error': 'Invalid vendor code'}
+            )
+        else:
+            new_code = form.save(commit=False)
+            new_code.user = request.user
+            new_code.save()
+            return redirect('currentuser')
 
 
 def viewcard(request, card_pk):
@@ -113,7 +123,7 @@ def viewcard(request, card_pk):
     card = get_object_or_404(ProductCard, pk=card_pk, user=request.user)
     if request.method == 'GET':
         form = SearchVendorCodeForm(instance=card)
-        return render(request, 'wb_tracker_app/viewcard.html', {'form': form})
+        return render(request, 'wb_tracker_app/viewcard.html', {'card': card, 'form': form})
     else:
         try:
             dates_list = []
@@ -127,34 +137,41 @@ def viewcard(request, card_pk):
                 date_from = form.cleaned_data.get('date_from')
                 date_to = form.cleaned_data.get('date_to')
             response = requests.get('https://wbx-content-v2.wbstatic.net/price-history/' + str(vendor_code) + '.json')
-            if response.status_code == 200:
-                json_file = response.json()
+            json_file = response.json()
 
-                for item in json_file:
-                    unix_time = item.get('dt')
-                    price = (item.get('price')).get('RUB')
+            for item in json_file:
+                unix_time = item.get('dt')
+                price = (item.get('price')).get('RUB')
 
-                    dates_list.append((datetime.utcfromtimestamp(unix_time).strftime('%Y-%m-%d')))
-                    prices_list.append(str(price / 100))
-                info = dict(zip(dates_list, prices_list))
-                displayed_date = []
-                displayed_price = []
-                for key in info.keys():
-                    if (datetime.strptime(key, '%Y-%m-%d') >= datetime.strptime(date_from, '%Y-%m-%d')) and (
-                            datetime.strptime(key, '%Y-%m-%d') <= datetime.strptime(date_to, '%Y-%m-%d')):
-                        displayed_date.append(key)
-                        displayed_price.append(info.get(key))
-                displayed_info = dict(zip(displayed_date, displayed_price))
+                dates_list.append((datetime.utcfromtimestamp(unix_time).strftime('%Y-%m-%d')))
+                prices_list.append(str(price / 100))
+            info = dict(zip(dates_list, prices_list))
+            displayed_date = []
+            displayed_price = []
+            for key in info.keys():
+                if (datetime.strptime(key, '%Y-%m-%d') >= datetime.strptime(date_from, '%Y-%m-%d')) and (
+                        datetime.strptime(key, '%Y-%m-%d') <= datetime.strptime(date_to, '%Y-%m-%d')):
+                    displayed_date.append(key)
+                    displayed_price.append(info.get(key))
+            displayed_info = dict(zip(displayed_date, displayed_price))
+            list_info = ''
+            for date, price in displayed_info.items():
+                list_info += f'On {date} price was {price}\n'
 
-                return render(
-                    request,
-                    'wb_tracker_app/response.html',
-                    {'get_price': displayed_info})
-            else:
-                return render(request, 'wb_tracker_app/response.html', {'error': 'Invalid vendor code'})
+            return render(
+                request,
+                'wb_tracker_app/response.html',
+                {'get_price': list_info}
+            )
         except ValueError:
             return render(
                 request,
                 'wb_tracker_app/entervendorcode.html',
                 {'form': SearchVendorCodeForm()}
             )
+
+def deletecard(request, card_pk):
+    card = get_object_or_404(ProductCard, pk=card_pk, user=request.user)
+    if request.method == 'POST':
+        card.delete()
+        return redirect('currentuser')

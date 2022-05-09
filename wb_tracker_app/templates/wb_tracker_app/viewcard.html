@@ -1,9 +1,15 @@
+{% extends 'wb_tracker_app/base.html' %}
 
-{#{{ card }}#}
-
+{% block content %}
 
 <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Check price history</button>
 </form>
+<form method="post" action="{% url 'deletecard' card.id %}">
+    {% csrf_token %}
+    <button type="submit">Delete card</button>
+</form>
+
+{% endblock %}

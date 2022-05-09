@@ -31,5 +31,6 @@ urlpatterns = [
 
     #Tracking
     path('addingcard/', views.addingcard, name='addingcard'),
-    path('card<int:card_pk>/', views.viewcard, name='viewcard'),
+    path('card/<int:card_pk>/', views.viewcard, name='viewcard'),
+    path('card/<int:card_pk>/delete/', views.deletecard, name='deletecard'),
 ]

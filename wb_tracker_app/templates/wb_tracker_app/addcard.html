@@ -1,4 +1,3 @@
-please, add a new card )))
 
 {% extends 'wb_tracker_app/base.html' %}
 
@@ -6,6 +5,7 @@ please, add a new card )))
     <form method="post">
     {% csrf_token %}
     {{ adding_form }}
+    {{ error }}
     <button type="submit">Save</button>
     </form>
 
