@@ -30,6 +30,6 @@ urlpatterns = [
     path('logout/', views.logoutuser, name='logoutuser'),
 
     #Tracking
-    path('codeinput/', views.entervendorcode, name='entervendorcode'),
-    path('response/', views.entervendorcode, name='entervendorcode'),
+    path('addingcard/', views.addingcard, name='addingcard'),
+    path('card<int:card_pk>/', views.viewcard, name='viewcard'),
 ]

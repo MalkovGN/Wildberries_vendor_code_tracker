@@ -1,5 +1,3 @@
-current user
-<br>
 
 {% if user.is_authenticated %}
     Logged in as {{ user.username }}
@@ -10,4 +8,12 @@ current user
 {% endif %}
 <br>
 
-<a href="{% url 'entervendorcode' %}">Check the price</a>
+<a href="{% url 'addingcard' %}">Adding a card</a>
+{% for code in codes %}
+    <a href="{% url 'viewcard' code.id %}">
+    {% if code.vendor_code %} - {{ code.vendor_code }} {% endif %}
+    </a>
+{#    {{ code.id }}#}
+{% endfor %}
+
+

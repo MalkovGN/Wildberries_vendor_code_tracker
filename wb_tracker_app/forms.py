@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from .models import VendorCode
+from .models import ProductCard, VendorCode
 
 
 class RegisterForm(UserCreationForm):
@@ -27,3 +27,13 @@ class SearchVendorCodeForm(ModelForm):
     class Meta:
         model = VendorCode
         fields = ['vendor_code', 'date_from', 'date_to']
+
+
+class AddingCardForm(ModelForm):
+    """
+    Form for adding and
+    save vendor code
+    """
+    class Meta:
+        model = ProductCard
+        fields = ['vendor_code']

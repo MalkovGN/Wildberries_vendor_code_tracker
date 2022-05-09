@@ -1,13 +1,14 @@
 import requests
 from datetime import datetime
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.db import IntegrityError
 
-from .forms import RegisterForm, SearchVendorCodeForm
+from .forms import RegisterForm, SearchVendorCodeForm, AddingCardForm
+from .models import ProductCard
 
 
 def home(request):
@@ -79,23 +80,40 @@ def logoutuser(request):
         return redirect('home')
 
 
-
 def currentuser(request):
     """
     The first page after
     registration/authentication
     """
-    return render(request, 'wb_tracker_app/currentuser.html')
+    codes = ProductCard.objects.filter(user=request.user)
+    return render(request, 'wb_tracker_app/currentuser.html', {'codes': codes})
 
 
-def entervendorcode(request):
+def addingcard(request):
     """
-    A function that takes a vendor code and a time interval
-    and displays the history of the price
-    of goods with this article
+    The page of adding
+    a new card
     """
     if request.method == 'GET':
-        return render(request, 'wb_tracker_app/entervendorcode.html', {'form': SearchVendorCodeForm()})
+        return render(request, 'wb_tracker_app/addcard.html', {'adding_form': AddingCardForm})
+    else:
+        form = AddingCardForm(request.POST)
+        new_code = form.save(commit=False)
+        new_code.user = request.user
+        new_code.save()
+        return redirect('currentuser')
+
+
+def viewcard(request, card_pk):
+    """
+    The page for viewing the
+    added card and viewing the
+    price history
+    """
+    card = get_object_or_404(ProductCard, pk=card_pk, user=request.user)
+    if request.method == 'GET':
+        form = SearchVendorCodeForm(instance=card)
+        return render(request, 'wb_tracker_app/viewcard.html', {'form': form})
     else:
         try:
             dates_list = []
@@ -113,7 +131,6 @@ def entervendorcode(request):
                 json_file = response.json()
 
                 for item in json_file:
-
                     unix_time = item.get('dt')
                     price = (item.get('price')).get('RUB')
 
@@ -123,7 +140,8 @@ def entervendorcode(request):
                 displayed_date = []
                 displayed_price = []
                 for key in info.keys():
-                    if (datetime.strptime(key, '%Y-%m-%d') >= datetime.strptime(date_from, '%Y-%m-%d')) and (datetime.strptime(key, '%Y-%m-%d') <= datetime.strptime(date_to, '%Y-%m-%d')):
+                    if (datetime.strptime(key, '%Y-%m-%d') >= datetime.strptime(date_from, '%Y-%m-%d')) and (
+                            datetime.strptime(key, '%Y-%m-%d') <= datetime.strptime(date_to, '%Y-%m-%d')):
                         displayed_date.append(key)
                         displayed_price.append(info.get(key))
                 displayed_info = dict(zip(displayed_date, displayed_price))

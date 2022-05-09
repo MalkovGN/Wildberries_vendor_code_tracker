@@ -1,0 +1,12 @@
+please, add a new card )))
+
+{% extends 'wb_tracker_app/base.html' %}
+
+{% block content %}
+    <form method="post">
+    {% csrf_token %}
+    {{ adding_form }}
+    <button type="submit">Save</button>
+    </form>
+
+{% endblock %}
