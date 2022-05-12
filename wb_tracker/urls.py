@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from wb_tracker_app import views
 
@@ -33,4 +33,7 @@ urlpatterns = [
     path('addingcard/', views.addingcard, name='addingcard'),
     path('card/<int:card_pk>/', views.viewcard, name='viewcard'),
     path('card/<int:card_pk>/delete/', views.deletecard, name='deletecard'),
+
+    #api
+    path('api/', include('wb_tracker_api.urls')),
 ]

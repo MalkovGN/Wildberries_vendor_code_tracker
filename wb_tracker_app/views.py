@@ -146,10 +146,10 @@ def viewcard(request, card_pk):
     added card and viewing the
     price history
     """
-    card = get_object_or_404(ProductCard, pk=card_pk, user=request.user)
+    cards = get_object_or_404(ProductCard, pk=card_pk, user=request.user)
     if request.method == 'GET':
-        form = SearchVendorCodeForm(instance=card)
-        return render(request, 'wb_tracker_app/viewcard.html', {'card': card, 'form': form})
+        form = SearchVendorCodeForm(instance=cards)
+        return render(request, 'wb_tracker_app/viewcard.html', {'cards': cards, 'form': form})
     else:
         try:
             dates_list = []
