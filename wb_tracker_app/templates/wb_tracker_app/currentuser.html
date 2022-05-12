@@ -10,9 +10,10 @@
 
 <a href="{% url 'addingcard' %}">Adding a card</a>
 <br>
-{% for code in codes %}
-    <a href="{% url 'viewcard' code.id %}">
-    {% if code.vendor_code %} - {{ code.vendor_code }} {% endif %}
+{% for card in cards %}
+    <a href="{% url 'viewcard' card.id %}">
+    {% if card.product_name %}  {{ card.product_name }} {% endif %}
+    -Артикул {{ card.vendor_code }}
     <br>
     </a>
 {% endfor %}

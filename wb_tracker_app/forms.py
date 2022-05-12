@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from .models import ProductCard, VendorCode
+from .models import ProductCard
 
 
 class RegisterForm(UserCreationForm):
@@ -25,8 +25,8 @@ class SearchVendorCodeForm(ModelForm):
     and time interval
     """
     class Meta:
-        model = VendorCode
-        fields = ['vendor_code', 'date_from', 'date_to']
+        model = ProductCard
+        fields = ['product_name', 'vendor_code', 'date_from', 'date_to']
 
 
 class AddingCardForm(ModelForm):
