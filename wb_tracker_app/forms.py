@@ -36,4 +36,4 @@ class AddingCardForm(ModelForm):
     """
     class Meta:
         model = ProductCard
-        fields = ['vendor_code']
+        fields = ['vendor_code', 'date_from', 'date_to']

@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 
 from .forms import RegisterForm, SearchVendorCodeForm, AddingCardForm
@@ -71,6 +72,7 @@ def loginuser(request):
             return redirect('currentuser')
 
 
+@login_required
 def logoutuser(request):
     """
     Logout function
@@ -80,6 +82,7 @@ def logoutuser(request):
         return redirect('home')
 
 
+@login_required
 def currentuser(request):
     """
     The first page after
@@ -89,6 +92,7 @@ def currentuser(request):
     return render(request, 'wb_tracker_app/currentuser.html', {'cards': cards})
 
 
+@login_required
 def addingcard(request):
     """
     The page of adding
@@ -140,6 +144,7 @@ def addingcard(request):
             return redirect('currentuser')
 
 
+@login_required
 def viewcard(request, card_pk):
     """
     The page for viewing the
@@ -198,6 +203,7 @@ def viewcard(request, card_pk):
             )
 
 
+@login_required
 def deletecard(request, card_pk):
     card = get_object_or_404(ProductCard, pk=card_pk, user=request.user)
     if request.method == 'POST':

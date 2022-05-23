@@ -4,7 +4,7 @@
 {% block content %}
     <form method="post">
     {% csrf_token %}
-    {{ adding_form }}
+    {{ adding_form.as_p }}
     {{ error }}
     <button type="submit">Save</button>
     </form>
